@@ -1,7 +1,28 @@
-const {app, BrowserWindow, webFrame, Menu, dialog} = require('electron')
+const {app, autoUpdater, BrowserWindow, webFrame, Menu, dialog} = require('electron')
 const path = require('path')
 const url = require('url')
 const shell = require('electron').shell
+const server = 'https://electron-update-server.herokuapp.com'
+const feed = `${server}/update/rickycodes/Dotgrid/${process.platform}/${app.getVersion()}`
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  }
+
+  dialog.showMessageBox(dialogOpts, (response) => {
+    if (response === 0) autoUpdater.quitAndInstall()
+  })
+})
+
+autoUpdater.on('error', message => {
+  console.error('There was a problem updating the application')
+  console.error(message)
+})
 
 let is_shown = true;
 
@@ -45,6 +66,14 @@ app.on('ready', () =>
   app.win.on('show',function() {
     is_shown = true;
   })
+
+  // we'll only want to do this in the packaged app!
+  if (!process.env.DEV) {
+    const oneMinute = 60000;
+    setInterval(() => {
+      autoUpdater.checkForUpdates()
+    }, oneMinute);
+  }
 })
 
 app.on('window-all-closed', () => 
