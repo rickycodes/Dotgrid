@@ -1,6 +1,6 @@
 {
   "name": "Dotgrid",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "Dotgrid is a simple vector drawing application.",
   "author": "@neauoire",
   "main": "main.js",
@@ -11,6 +11,15 @@
       "appId": "com.electron.dotgrid",
       "mac": {
         "category": "public.app-category.graphics-design"
+      },
+      "linux": {
+        "category": "graphics-design",
+        "target": [
+          {
+            "target": "deb",
+            "arch": ["x64"]
+          }
+        ]
       }
     },
     "pack": "electron-builder --dir",
