@@ -1,4 +1,4 @@
 node_modules/
-builds/
+dist/
 package-lock.json
 npm-debug.log
